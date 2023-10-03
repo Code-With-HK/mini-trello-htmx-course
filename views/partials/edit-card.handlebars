@@ -1,0 +1,14 @@
+<input
+  hx-patch="/lists/{{this.listId}}/cards/{{this.cardId}}"
+  hx-swap="outerHTML"
+  hx-target="#cardItem-{{this.cardId}}"
+  hx-trigger="blur"
+  type="text"
+  required
+  minlength="4"
+  placeholder="Enter card title..."
+  name="name"
+  value="{{this.name}}"
+  autofocus
+  class="placeholder:text-zinc-700 p-2 font-bold rounded-lg bg-gray-200"
+/>

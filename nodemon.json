@@ -1,0 +1,4 @@
+{
+    "ignore": ["**/db.json"],
+    "ext": "handlebars, js, css"
+}

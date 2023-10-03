@@ -1,0 +1,13 @@
+<input
+  hx-patch="/lists/{{this.listId}}"
+  hx-swap="outerHTML"
+  hx-trigger="blur"
+  type="text"
+  required
+  minlength="4"
+  placeholder="Enter list title..."
+  name="name"
+  value="{{this.name}}"
+  class="placeholder:text-zinc-700 p-2 font-bold rounded-lg"
+  autofocus
+/>

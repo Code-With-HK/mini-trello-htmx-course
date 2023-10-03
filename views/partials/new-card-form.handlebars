@@ -1,0 +1,29 @@
+<form
+  hx-post="/lists/{{this.listId}}/cards"
+  hx-swap="outerHTML"
+  class="p-2 flex flex-col"
+  id="newCardForm-{{this.listId}}"
+>
+  <input
+    type="text"
+    class="p-2 rounded-md shadow-lg placeholder:text-zinc-700"
+    name="name"
+    placeholder="Enter a title for this card..."
+    autofocus
+  />
+  <div class="flex items-center gap-2 mt-2">
+    <button
+      type="submit"
+      class="bg-blue-600 rounded-md text-white py-1 px-3 transition-all hover:bg-blue-800"
+    >Add Card</button>
+    <img
+      src="assets/cross.svg"
+      alt="close icon"
+      class="w-8 h-8 cursor-pointer"
+      title="Close Add Card"
+      hx-get="lists/{{this.listId}}/add-new-card"
+      hx-swap="outerHTML"
+      hx-target="#newCardForm-{{this.listId}}"
+    />
+  </div>
+</form>

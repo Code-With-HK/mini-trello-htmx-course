@@ -1,0 +1,57 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Alata&family=Josefin+Sans:wght@300&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <title>HTMX Todo List App</title>
+</head>
+
+<body class="bg-[#0079BF]">
+  {{{body}}}
+  <script src="https://unpkg.com/htmx.org@1.9.6"
+    integrity="sha384-FhXw7b6AlE/jyjlZH5iHa/tTe9EpJ1Y55RjcgPbjeWMskSxZt1v9qkxLJWNJaGni"
+    crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/hyperscript.org@0.9.9"></script>
+  <script src="https://unpkg.com/sortablejs@1.15.0/Sortable.min.js"></script>
+  <script>
+    htmx.onLoad((target) => {
+      const cards =
+        target.querySelectorAll('.sort-card'); const lists =
+          target.querySelectorAll('.sort-list'); cards.forEach(sortable =>
+            Sortable.create(sortable, {
+              animation: 150, swapThreshold: 0.60, group:
+                'cards', onEnd: function (evt) {
+                  const oldListId = evt.from.id; const
+                    newListId = evt.to.id; const cardOldPosition = evt.oldIndex; const
+                      cardNewPosition = evt.newIndex;
+                  target.querySelector('#cardMove #fromList').value = oldListId;
+                  target.querySelector('#cardMove #toList').value = newListId;
+                  target.querySelector('#cardMove #fromPosition').value = cardOldPosition;
+                  target.querySelector('#cardMove d#toPosition').value = cardNewPosition; const event = new
+                    Event("cardSubmit");
+                  target.querySelector('#cardMove').dispatchEvent(event);
+                }
+            }));
+      lists.forEach(function (sortable) {
+        Sortable.create(sortable, {
+          animation:
+            150, group: 'lists', swapThreshold: 0.60, onEnd: function (evt) {
+              const
+                fromPosition = evt.oldIndex; const toPosition = evt.newIndex;
+              target.querySelector('#listMove #fromPosition').value = fromPosition;
+              target.querySelector('#listMove #toPosition').value = toPosition; const
+                event = new Event("listSubmit");
+              target.querySelector('#listMove').dispatchEvent(event);
+            }
+        })
+      });
+    });
+  </script>
+</body>
+
+</html>

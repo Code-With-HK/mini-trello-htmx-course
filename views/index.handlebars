@@ -1,0 +1,21 @@
+{{>header}}
+<form hx-post="/cards/move" id="cardMove" hx-trigger="cardSubmit" hx-swap="none">
+    <input id="fromList" name="fromList" type="hidden" />
+    <input id="toList" name="toList" type="hidden" />
+    <input id="fromPosition" name="fromPosition" type="hidden" />
+    <input id="toPosition" name="toPosition" type="hidden" />
+</form>
+<form hx-post="/lists/move" id="listMove" hx-trigger="listSubmit" hx-swap="none">
+    <input id="fromPosition" name="fromPosition" type="hidden" />
+    <input id="toPosition" name="toPosition" type="hidden" />
+</form>
+<section id="board" class="m-4 flex gap-4">
+    {{#if lists}}
+    <div class="flex gap-4 sort-list">
+        {{#each lists}}
+            {{>list}}
+        {{/each}}
+            {{>addNewList}}
+    </div>
+    {{/if}}
+</section>

@@ -1,0 +1,47 @@
+{
+  "lists": [
+    {
+      "listId": "91e1a84a-7f14-4f61-baf0-5c94607f9a9b",
+      "name": "Learn",
+      "cards": [
+        {
+          "name": "React",
+          "cardId": "81a1943a-a396-44ef-a1ce-5fe3a30d382a",
+          "listId": "91e1a84a-7f14-4f61-baf0-5c94607f9a9b"
+        },
+        {
+          "name": "NodeJS",
+          "cardId": "5188d511-1910-4eba-bf4d-9f472218cbee",
+          "listId": "f221df60-357a-4e16-9f8a-49e2229594df"
+        }
+      ]
+    },
+    {
+      "listId": "824e95a8-d6fe-4cd3-8ee5-7a043101e8f6",
+      "name": "Test",
+      "cards": [
+        {
+          "name": "asds",
+          "cardId": "bce24da0-2ccc-49b5-9f29-9e83bae93627",
+          "listId": "824e95a8-d6fe-4cd3-8ee5-7a043101e8f6"
+        }
+      ]
+    },
+    {
+      "listId": "f221df60-357a-4e16-9f8a-49e2229594df",
+      "name": "Books",
+      "cards": [
+        {
+          "name": "Clean Code",
+          "cardId": "405cf2ae-fbb6-4207-ac4f-0932eb1502bb",
+          "listId": "f221df60-357a-4e16-9f8a-49e2229594df"
+        },
+        {
+          "name": "HTMX",
+          "cardId": "3eb41945-bfa4-43fa-ad8a-5bd5f261c8a5",
+          "listId": "91e1a84a-7f14-4f61-baf0-5c94607f9a9b"
+        }
+      ]
+    }
+  ]
+}

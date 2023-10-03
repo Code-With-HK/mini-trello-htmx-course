@@ -1,0 +1,33 @@
+<div id="newList">
+  <form
+    hx-post="/lists"
+    hx-target="#newList"
+    hx-swap="outerHTML"
+    class="w-[17rem] bg-gray-200 rounded-lg p-2 flex flex-col gap-2"
+  >
+    <input
+      type="text"
+      required
+      minlength="4"
+      placeholder="Enter list title..."
+      name="name"
+      class="text-lg placeholder:text-zinc-700 p-2"
+      autofocus
+    />
+    <div class="flex items-center gap-2">
+      <button
+        type="submit"
+        class="bg-blue-600 rounded-md text-white py-1 px-3 transition-all hover:bg-blue-800"
+      >Add List</button>
+      <img
+        src="assets/cross.svg"
+        alt="close icon"
+        class="w-8 h-8 cursor-pointer"
+        title="Close Add List"
+        hx-get="/add-new-list"
+        hx-target="#newList"
+        hx-swap="outerHTML"
+      />
+    </div>
+  </form>
+</div>

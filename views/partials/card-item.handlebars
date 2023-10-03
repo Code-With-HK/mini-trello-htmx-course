@@ -1,0 +1,22 @@
+<div
+  class="bg-white shadow-lg rounded-lg p-2 flex justify-between items-center hover:bg-gray-100"
+  id="cardItem-{{this.listId}}-{{this.cardId}}"
+>
+  <div
+    class="cursor-pointer"
+    hx-get="/lists/{{this.listId}}/cards/{{this.cardId}}"
+    hx-swap="outerHTML"
+  >{{this.name}}</div>
+  <div>
+    <img
+      hx-delete="/lists/{{this.listId}}/cards/{{this.cardId}}"
+      hx-target="#cardItem-{{this.listId}}-{{this.cardId}}"
+      hx-swap="delete"
+      hx-confirm="Are you sure?"
+      src="assets/trash.svg"
+      class="w-5 h-5 cursor-pointer"
+      title="Delete Card"
+      alt="delete icon"
+    />
+  </div>
+</div>
