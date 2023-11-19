@@ -1,13 +1,12 @@
 {
-  "name": "todo-list-app",
+  "name": "mini-trello",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "type": "module",
   "scripts": {
     "start": "nodemon index.js",
-    "watch": "tailwindcss -i ./input.css -o ./public/css/style.css --watch",
-    "build:css": "tailwindcss -i ./input.css -o ./public/css/style.css"
+    "watch": "tailwindcss -i ./input.css -o ./public/css/style.css --watch"
   },
   "keywords": [],
   "author": "",

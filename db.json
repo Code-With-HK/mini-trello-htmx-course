@@ -1,45 +1,29 @@
 {
   "lists": [
     {
-      "listId": "91e1a84a-7f14-4f61-baf0-5c94607f9a9b",
-      "name": "Learn",
+      "listId": "543ecf4f-1e15-4e92-a943-51d67a4f3573",
+      "name": "To Learn",
       "cards": [
-        {
-          "name": "React",
-          "cardId": "81a1943a-a396-44ef-a1ce-5fe3a30d382a",
-          "listId": "91e1a84a-7f14-4f61-baf0-5c94607f9a9b"
-        },
-        {
-          "name": "NodeJS",
-          "cardId": "5188d511-1910-4eba-bf4d-9f472218cbee",
-          "listId": "f221df60-357a-4e16-9f8a-49e2229594df"
-        }
-      ]
-    },
-    {
-      "listId": "824e95a8-d6fe-4cd3-8ee5-7a043101e8f6",
-      "name": "Test",
-      "cards": [
-        {
-          "name": "asds",
-          "cardId": "bce24da0-2ccc-49b5-9f29-9e83bae93627",
-          "listId": "824e95a8-d6fe-4cd3-8ee5-7a043101e8f6"
-        }
-      ]
-    },
-    {
-      "listId": "f221df60-357a-4e16-9f8a-49e2229594df",
-      "name": "Books",
-      "cards": [
-        {
-          "name": "Clean Code",
-          "cardId": "405cf2ae-fbb6-4207-ac4f-0932eb1502bb",
-          "listId": "f221df60-357a-4e16-9f8a-49e2229594df"
-        },
         {
           "name": "HTMX",
-          "cardId": "3eb41945-bfa4-43fa-ad8a-5bd5f261c8a5",
-          "listId": "91e1a84a-7f14-4f61-baf0-5c94607f9a9b"
+          "cardId": "c0142c3c-dd4f-4e92-a691-2bd4fe2b9484",
+          "listId": "543ecf4f-1e15-4e92-a943-51d67a4f3573"
+        }
+      ]
+    },
+    {
+      "listId": "7be79f4e-e309-4ff1-8a34-57ce0a069b36",
+      "name": "To Buy",
+      "cards": [
+        {
+          "name": "Buy Book",
+          "cardId": "894d65e0-172d-4a7e-a3de-0e93b2872e48",
+          "listId": "7be79f4e-e309-4ff1-8a34-57ce0a069b36"
+        },
+        {
+          "name": "React",
+          "cardId": "7a40edbb-e944-4794-bd2d-27ae6267004b",
+          "listId": "543ecf4f-1e15-4e92-a943-51d67a4f3573"
         }
       ]
     }

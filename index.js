@@ -1,17 +1,17 @@
 import express from "express";
+import { engine } from "express-handlebars";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
-import { engine } from "express-handlebars";
-import { readFileSync } from "fs";
-import handlebars from "handlebars";
-import { v4 as uuid } from "uuid";
 import { Low } from "lowdb";
 import { JSONFile } from "lowdb/node";
+import handlebars from "handlebars";
+import { readFileSync } from "fs";
+import { v4 as uuid } from "uuid";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const file = join(__dirname, "db.json");
 
-const PORT = 3001;
+const PORT = 3000;
 const app = express();
 
 app.engine("handlebars", engine());
@@ -23,14 +23,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(`${__dirname}/public`));
 
 const adapter = new JSONFile(file);
-const defaultData = {
-  lists: [],
-};
+const defaultData = { lists: [] };
 const db = new Low(adapter, defaultData);
 
-const header = handlebars.compile(
-  readFileSync(`${__dirname}/views/partials/header.handlebars`, "utf-8")
-);
+await db.read();
 
 const addNewList = handlebars.compile(
   readFileSync(`${__dirname}/views/partials/add-new-list.handlebars`, "utf-8")
@@ -38,6 +34,10 @@ const addNewList = handlebars.compile(
 
 const list = handlebars.compile(
   readFileSync(`${__dirname}/views/partials/list.handlebars`, "utf-8")
+);
+
+const listHeader = handlebars.compile(
+  readFileSync(`${__dirname}/views/partials/list-header.handlebars`, "utf-8")
 );
 
 const addNewCard = handlebars.compile(
@@ -48,12 +48,10 @@ const cardItem = handlebars.compile(
   readFileSync(`${__dirname}/views/partials/card-item.handlebars`, "utf-8")
 );
 
-app.get("/", async (req, res) => {
-  await db.read();
+app.get("/", (req, res) => {
   const { lists } = db.data;
-
   res.render("index", {
-    partials: { header, addNewList, list, addNewCard, cardItem },
+    partials: { addNewList, list, listHeader, addNewCard, cardItem },
     lists,
   });
 });
@@ -74,23 +72,18 @@ app.post("/lists", async (req, res) => {
 
   res.render("partials/list-with-new-list-btn", {
     layout: false,
-    partials: { addNewCard, list, addNewList },
+    partials: { addNewList, list, listHeader, addNewCard, cardItem },
     ...newList,
   });
 });
 
-app.delete("/lists/:listId", async (req, res) => {
+app.get("/lists/edit/:listId", (req, res) => {
   const { listId } = req.params;
-  const idx = db.data.lists.findIndex((t) => t.listId === listId);
-  db.data.lists.splice(idx, 1);
-  await db.write();
+  const list = db.data.lists.find((list) => list.listId === listId);
 
-  res.status(200).send("");
-});
-
-app.get("/lists/edit/:listId", async (req, res) => {
-  const { listId } = req.params;
-  const list = db.data.lists.find((t) => t.listId === listId);
+  if (!list) {
+    return res.status(400).send("Invalid List ID");
+  }
 
   res.render("partials/edit-list", {
     layout: false,
@@ -101,7 +94,12 @@ app.get("/lists/edit/:listId", async (req, res) => {
 app.patch("/lists/:listId", async (req, res) => {
   const { listId } = req.params;
   const { name } = req.body;
-  const list = db.data.lists.find((t) => t.listId === listId);
+  const list = db.data.lists.find((list) => list.listId === listId);
+
+  if (!list) {
+    return res.status(400).send("Invalid List ID");
+  }
+
   list.name = name;
   await db.write();
 
@@ -111,12 +109,21 @@ app.patch("/lists/:listId", async (req, res) => {
   });
 });
 
+app.delete("/lists/:listId", async (req, res) => {
+  const { listId } = req.params;
+  const idx = db.data.lists.findIndex((list) => list.listId === listId);
+  if (idx === -1) {
+    return res.status(400).send("Invalid List ID");
+  }
+  db.data.lists.splice(idx, 1);
+  await db.write();
+
+  res.status(200).send("");
+});
+
 app.get("/lists/:listId/new-card", (req, res) => {
   const { listId } = req.params;
-  res.render("partials/new-card-form", {
-    layout: false,
-    listId,
-  });
+  res.render("partials/new-card-form", { layout: false, listId });
 });
 
 app.get("/lists/:listId/add-new-card", (req, res) => {
@@ -127,7 +134,12 @@ app.get("/lists/:listId/add-new-card", (req, res) => {
 app.post("/lists/:listId/cards", async (req, res) => {
   const { listId } = req.params;
   const { name } = req.body;
-  const list = db.data.lists.find((t) => t.listId === listId);
+
+  const list = db.data.lists.find((list) => list.listId === listId);
+
+  if (!list) {
+    return res.status(400).send("Invalid List ID");
+  }
   const newCard = { name, cardId: uuid(), listId };
   list.cards.push(newCard);
   await db.write();
@@ -139,22 +151,50 @@ app.post("/lists/:listId/cards", async (req, res) => {
   });
 });
 
+app.delete("/lists/:listId/cards/:cardId", async (req, res) => {
+  const { listId, cardId } = req.params;
+  const list = db.data.lists.find((list) => list.listId === listId);
+
+  if (!list) {
+    return res.status(400).send("Invalid List ID");
+  }
+  const cardIdx = list.cards.findIndex((card) => card.cardId === cardId);
+  if (cardIdx === -1) {
+    return res.status(400).send("Invalid Card ID");
+  }
+  list.cards.splice(cardIdx, 1);
+  await db.write();
+
+  res.status(200).send("");
+});
+
 app.get("/lists/:listId/cards/:cardId", (req, res) => {
   const { listId, cardId } = req.params;
-  const list = db.data.lists.find((t) => t.listId === listId);
-  const card = list.cards.find((card) => card.cardId === cardId);
+  const list = db.data.lists.find((list) => list.listId === listId);
 
-  return res.render("partials/edit-card", {
-    layout: false,
-    ...card,
-  });
+  if (!list) {
+    return res.status(400).send("Invalid List ID");
+  }
+  const card = list.cards.find((card) => card.cardId === cardId);
+  if (!card) {
+    return res.status(400).send("Invalid Card ID");
+  }
+
+  res.render("partials/edit-card", { layout: false, ...card });
 });
 
 app.patch("/lists/:listId/cards/:cardId", async (req, res) => {
   const { listId, cardId } = req.params;
   const { name } = req.body;
-  const list = db.data.lists.find((t) => t.listId === listId);
+  const list = db.data.lists.find((list) => list.listId === listId);
+
+  if (!list) {
+    return res.status(400).send("Invalid List ID");
+  }
   const card = list.cards.find((card) => card.cardId === cardId);
+  if (!card) {
+    return res.status(400).send("Invalid Card ID");
+  }
   card.name = name;
   await db.write();
 
@@ -164,14 +204,12 @@ app.patch("/lists/:listId/cards/:cardId", async (req, res) => {
   });
 });
 
-app.delete("/lists/:listId/cards/:cardId", async (req, res) => {
-  const { listId, cardId } = req.params;
-  const list = db.data.lists.find((t) => t.listId === listId);
-  const cardIdx = list.cards.findIndex((card) => card.cardId === cardId);
-  list.cards.splice(cardIdx, 1);
+app.post("/lists/move", async (req, res) => {
+  const { fromPosition, toPosition } = req.body;
+  const fromList = db.data.lists.splice(fromPosition, 1)[0];
+  db.data.lists.splice(toPosition, 0, fromList);
   await db.write();
-
-  res.status(200).send("");
+  res.send("");
 });
 
 app.post("/cards/move", async (req, res) => {
@@ -182,27 +220,22 @@ app.post("/cards/move", async (req, res) => {
   let filteredList = db.data.lists.find(
     (list) => list.listId === parsedFromList
   );
+  if (!filteredList) {
+    return res.status(400).send("Invalid List ID");
+  }
   const card = filteredList.cards.splice(fromPosition, 1)[0];
-
   if (parsedFromList !== parsedToList) {
     filteredList = db.data.lists.find((list) => list.listId === parsedToList);
+    if (!filteredList) {
+      return res.status(400).send("Invalid List ID");
+    }
   }
   filteredList.cards.splice(toPosition, 0, card);
-
-  await db.write();
-
-  res.send("");
-});
-
-app.post("/lists/move", async (req, res) => {
-  const { fromPosition, toPosition } = req.body;
-  const fromList = db.data.lists.splice(fromPosition, 1)[0];
-  db.data.lists.splice(toPosition, 0, fromList);
   await db.write();
 
   res.send("");
 });
 
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`server is running on http://localhost:${PORT}`);
 });
